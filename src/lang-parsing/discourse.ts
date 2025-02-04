@@ -1,11 +1,5 @@
-import {
-  NGramSequence,
-  Word,
-  NGram,
-  WordNGram,
-} from './types';
-import {getWordNGrams} from './ngrams';
-import {getWords} from './tokenizers';
+import {Methodius} from 'methodius';
+import {Word, WordNGram} from 'methodius/dist/types';
 
 /*
 fuck | s|er|ed|ing, motherfucker
@@ -32,35 +26,59 @@ const affirmationRegex = /\b(y((e+|a+|u+)(a+)?(y|h|s|p)?)\b)/gi
 
 
 
-export function getSurroundingWords( string, searchWord: string, rangeSize: number = 1) : string[] {
-    const safeString = string.toLowerCase();
-    const safeSearchWord = searchWord.toLowerCase();
-    let adjacentWords: string[] = [];
-    const wordNGrams = getWordNGrams(safeString, 3); // self + size on each side 
-    const wordNGramsWithSearch = wordNGrams.filter((wordNgrams) => wordNgrams.includes(safeSearchWord.toLowerCase() ));
+export function getSurroundingWords( wordNgrams: WordNGram[] , searchWord: string) : Word[] {
+    let adjacentWords: Word[] = [];
+    const wordNGramsWithSearch: WordNGram[] = wordNgrams.filter((wordNgrams) => wordNgrams.includes(searchWord ));
     const uniqueWords = [...new Set(wordNGramsWithSearch.flat())];
-    adjacentWords = uniqueWords.filter((word) => word !== searchWord  )
+    adjacentWords = uniqueWords.filter((word) => word !== searchWord  ) as Word[];
     return adjacentWords;
 }
 
-export function getPronounPlacement(text: string = '', pronoun: string = '') {
-    const wordList = getWords(text.toLowerCase());
+enum PronounPlacement {
+  Start = 'start',
+  Middle = 'middle',
+  End = 'end',
+}
+
+export function getPronounPlacement(wordList: Word[], pronoun: string = '') : PronounPlacement {
     const pronounIndex = wordList.indexOf(pronoun.toLowerCase());
 
     let position;
 
     switch (pronounIndex) {
       case 0:
-        position = 'start';
+        position = 'Start' as PronounPlacement;
         break;
       case wordList.length - 1:
-        position = 'end';
+        position = 'End' as PronounPlacement;
         break;
       default:
-        position = 'middle';
+        position = 'Middle' as PronounPlacement;
         break;
     }
     return position; 
+}
+
+interface PronounData {
+  pronoun: string;
+  placement: PronounPlacement;
+  surroundingWords: Word[];
+}
+
+export function getPronounData(text: string = '', pronoun: string = '') {
+  let safeText = text.toLowerCase();
+  let safePronoun = pronoun.toLowerCase();
+  const methodius = new Methodius(safeText);
+  const pronounPlacement = getPronounPlacement(methodius.words, safePronoun);
+  const surroundingWords = getSurroundingWords(Methodius.getWordNGrams(safeText), safePronoun);
+  const pronounData = {
+    pronoun,
+    pronounPlacement,
+    surroundingWords
+  };
+
+  return pronounData;
+
 }
 
 export function getNegation(text: string = '') {
@@ -109,6 +127,7 @@ interface TextData {
 }
 
 export function getDiscourseData(text: string = ''): TextData {
+
   return {
     profanity: getProfanity(text),
     negation: getNegation(text),

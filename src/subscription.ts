@@ -4,8 +4,7 @@ import {
 } from './lexicon/types/com/atproto/sync/subscribeRepos'
 import { FirehoseSubscriptionBase, getOpsByType } from './util/subscription'
 import { hasPronounInText, getPronounFromText } from './lang-parsing/pronouns';
-import { getWords } from './lang-parsing/tokenizers';
-import { getSurroundingWords, getPronounPlacement, getDiscourseData} from './lang-parsing/discourse';
+import { getPronounData, getDiscourseData} from './lang-parsing/discourse';
 
 export class FirehoseSubscription extends FirehoseSubscriptionBase {
   async handleEvent(evt: RepoEvent) {
@@ -30,8 +29,10 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
       .map((create) => {
         // map alf-related posts to a db row
         const pronoun = getPronounFromText(create.record.text);
-        const pronounPlacement = getPronounPlacement(create.record.text, pronoun);
-        const adjacentWords = getSurroundingWords(create.record.text, pronoun, 1);
+        const {
+          pronounPlacement,
+          surroundingWords
+        } = getPronounData(create.record.text, pronoun);
         const {
           profanity,
           negation,
@@ -43,7 +44,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
           text: create.record.text,
           pronoun,
           pronounPlacement,
-          surroundingWords: adjacentWords.toString(),
+          surroundingWords: surroundingWords.toString(),
           profanity,
           negation,
           affirmation,

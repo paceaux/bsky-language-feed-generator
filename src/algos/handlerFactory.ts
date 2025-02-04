@@ -1,7 +1,6 @@
 import { QueryParams } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import { AppContext } from '../config'
-import {getWords} from '../lang-parsing/tokenizers';
-import { getSurroundingWords, getPronounPlacement, getDiscourseData } from '../lang-parsing/discourse'
+import {  getPronounData, getDiscourseData  } from '../lang-parsing/discourse'
 
 export function getPronounHandler(pronoun: string) {
     const handler = async (ctx: AppContext, params: QueryParams) => {
@@ -19,15 +18,15 @@ export function getPronounHandler(pronoun: string) {
         }
         const res = await builder.execute()
 
-        const feed = res.map((row) => ({
-            post: row.uri,
-            pronoun: row.pronoun,
-            placement: getPronounPlacement(row.text, row.pronoun),
-            adjacentWords: getSurroundingWords(getWords(row.text), row.pronoun),
-            data: getDiscourseData(row.text),
-            length: getWords(row.text).length,
-            text: row.text,
-            }))
+        const feed = res.map((row) => {
+            return {
+                post: row.uri,
+                pronoun: row.pronoun,
+                pronounData: getPronounData(row.text, row.pronoun),
+                discourseData: getDiscourseData(row.text),
+                text: row.text
+            };
+         });
 
         let cursor: string | undefined
         const last = res.at(-1)
