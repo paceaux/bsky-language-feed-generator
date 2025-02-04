@@ -1,6 +1,7 @@
 import { QueryParams } from '../lexicon/types/app/bsky/feed/getFeedSkeleton'
 import { AppContext } from '../config'
 import {  getPronounData, getDiscourseData  } from '../lang-parsing/discourse'
+import Sentiment from 'sentiment'
 
 export function getPronounHandler(pronoun: string) {
     const handler = async (ctx: AppContext, params: QueryParams) => {
@@ -18,13 +19,21 @@ export function getPronounHandler(pronoun: string) {
         }
         const res = await builder.execute()
 
+        const sentiment = new Sentiment();
         const feed = res.map((row) => {
+        const {score, calculation, positive, negative } = sentiment.analyze(row.text);
             return {
                 post: row.uri,
                 pronoun: row.pronoun,
                 pronounData: getPronounData(row.text, row.pronoun),
                 discourseData: getDiscourseData(row.text),
-                text: row.text
+                text: row.text,
+                sentimentData: {
+                    score,
+                    calculation,
+                    positive,
+                    negative,
+                },
             };
          });
 
