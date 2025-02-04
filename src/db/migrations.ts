@@ -15,6 +15,13 @@ migrations['001'] = {
       .addColumn('uri', 'varchar', (col) => col.primaryKey())
       .addColumn('cid', 'varchar', (col) => col.notNull())
       .addColumn('indexedAt', 'varchar', (col) => col.notNull())
+      .addColumn('text', 'varchar', (col) => col.notNull())
+      .addColumn('pronoun', 'varchar', (col) => col.notNull())
+      .addColumn('pronounPlacement', 'varchar', (col) => col.notNull())
+      .addColumn('surroundingWords', 'varchar', (col) => col.notNull())
+      .addColumn('profanity', 'varchar', (col) => col.notNull())
+      .addColumn('negation', 'varchar', (col) => col.notNull())
+      .addColumn('affirmation', 'varchar', (col) => col.notNull())
       .execute()
     await db.schema
       .createTable('sub_state')
