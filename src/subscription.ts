@@ -12,18 +12,15 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
 
     const ops = await getOpsByType(evt)
 
+    // feel free to add more languages if we want  to study... more
+    // this will excludes posts in english if they aren't expliciltly tagged
     const supportedLanguages = ['en'];
-
     const postsForSupportedLanguages = ops.posts.creates.filter((post) => supportedLanguages.every((lang) => post?.record?.langs?.includes(lang)));
 
-    // This logs the text of every post off the firehose.
-    // Just for fun :)
-    // Delete before actually using
-    // for (const post of postsForSupportedLanguages) {
-    //   console.log(post.record);
-    // }
-
     const postsToDelete = ops.posts.deletes.map((del) => del.uri)
+
+    // THIS IS THE MAGIC
+    // This is takes posts that have been created and puts them in a database
     const postsToCreate = postsForSupportedLanguages
       .filter((create) => hasPronounInText(create?.record?.text))
       .map((create) => {
@@ -38,13 +35,16 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
           negation,
           affirmation
         } = getDiscourseData(create.record.text);
+
+        // this object returned here needs to match what you  see in db/schema
+        // it also needs to match what you see in db/migrations
         return {
           uri: create.uri,
           cid: create.cid,
           text: create.record.text,
           pronoun,
           pronounPlacement,
-          surroundingWords: surroundingWords.toString(),
+          surroundingWords: surroundingWords.toString(), // the database won't support a javascripty array
           profanity,
           negation,
           affirmation,
@@ -52,15 +52,19 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         }
       });
 
+    // for visualization purposes
     for (const post of postsToCreate) {
       console.log(post);
     }
+    
     if (postsToDelete.length > 0) {
       await this.db
         .deleteFrom('post')
         .where('uri', 'in', postsToDelete)
         .execute()
     }
+
+    // This will load the data into the database
     if (postsToCreate.length > 0) {
       await this.db
         .insertInto('post')
