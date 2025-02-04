@@ -32,12 +32,14 @@ const affirmationRegex = /\b(y((e+|a+|u+)(a+)?(y|h|s|p)?)\b)/gi
 
 
 
-export function getSurroundingWords( string, searchWord: string, rangeSize: number = 1) : WordNGram[] {
-    let adjacentWords: WordNGram[] = [];
-    const wordNGrams = getWordNGrams(string, (rangeSize * 2) + 1); // self + size on each side 
-    const wordNGramsWithSearch = wordNGrams.filter((wordNgrams) => wordNgrams.includes(searchWord));
-    adjacentWords = wordNGramsWithSearch.filter((wordNgramsWSearch) => wordNgramsWSearch.indexOf(searchWord) > rangeSize)
-
+export function getSurroundingWords( string, searchWord: string, rangeSize: number = 1) : string[] {
+    const safeString = string.toLowerCase();
+    const safeSearchWord = searchWord.toLowerCase();
+    let adjacentWords: string[] = [];
+    const wordNGrams = getWordNGrams(safeString, 3); // self + size on each side 
+    const wordNGramsWithSearch = wordNGrams.filter((wordNgrams) => wordNgrams.includes(safeSearchWord.toLowerCase() ));
+    const uniqueWords = [...new Set(wordNGramsWithSearch.flat())];
+    adjacentWords = uniqueWords.filter((word) => word !== searchWord  )
     return adjacentWords;
 }
 
