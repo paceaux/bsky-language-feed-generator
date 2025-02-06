@@ -8,7 +8,7 @@ dick + s|head|hole|ed
 ass + hole|hat|face 
 cock +s
 */
-const profanityRegex = /((\b)?(fuck)(\w+)?)|((\b)?shit(\w+)?)|((\b)dick(\w+|\b))|((\b)ass(\w+|\b))|((\b)cocks?\b)|((\b)cunts?\b)|((\b)twats?\b)|(wtf)|(stfu)/gi;
+const profanityRegex = /((\b)?(fuck)(\w+)?)|((\b)?shit(\w+)?)|((\b)dick(\w+|\b))|((\b)ass(\w+|\b))|((\b)cocks?\b)|((\b)cunts?\b)|((\b)twats?\b)|(wtf)|(stfu)|((\b)damn(ed|it)?\b)/gi;
 /*
 no + o, na + a, nu +u
 nah, naw, nuh
