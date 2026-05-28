@@ -7,9 +7,21 @@ import {hasArticleOrDemonstrative, hasPossessive, hasAdjective, hasPreposition, 
       second part is the pronoun itself: 
         chat, dude, bro, bruh, guy, sis, fam
     */
-const determinerExp = '(a(?:n(?:y|other))?|some|th(?:e(?:se|ir)?|at|is|ose))'
-const pronounExps = ['du+de', 'bro+', 'bru+h', 'cha+t', 'si+s', 'fa+m', 'gu+rl+', 'bo+i+']
-const possiblePronounRegex = new RegExp(`(?<!\\b${determinerExp}\\b\\s)\\b(?:${pronounExps.join('|')})\\b\\s?`,'i')
+const determinerExp = '(a(?:n(?:y|other))?|some|th(?:e(?:se|ir)?|at|is|ose))';
+/*
+  this is a way of mapping variations to their canonical forms.
+*/
+const pronounExps = new Map([
+    ['dude', 'du+de'],
+    ['bro', 'bro+'],
+    ['bruh', 'bru+h+'],
+    ['chat', 'cha+t'],
+    ['sis', 'si+s'],
+    ['fam', 'fa+m'],
+    ['gurl', 'gu+[rl]+'],
+    ['boi', 'bo+i+' ]
+]);
+const possiblePronounRegex = new RegExp(`(?<!\\b${determinerExp}\\b\\s)\\b(?:${[...pronounExps.values()].join('|')})\\b\\s?`,'i')
 
 
 export function hasPossiblePronounInText(text: string): boolean {
@@ -63,12 +75,15 @@ export function hasPronounInText(text: string): boolean {
 
 export function getPronounFromText(text: string = ''): string {
     if (!text) return '';
-    const match = text.match(possiblePronounRegex);
-    const pronoun = match
-        ? match[0]
-            ?.toLowerCase()
-            ?.trim()
-        : '';
+    let pronoun = '';
+    for (const [name,exp] of pronounExps.entries()) {
+        const regexp = new RegExp(`(${exp})`, 'gi');
+        const result = regexp.exec(text);
+        if (result) {
+            pronoun = name;
+            break;
+        }
+    }
         
     return pronoun;
 }
