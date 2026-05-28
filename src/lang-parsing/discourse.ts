@@ -8,20 +8,20 @@ dick + s|head|hole|ed
 ass + hole|hat|face 
 cock +s
 */
-const profanityRegex = /((\b)?(fuck)(\w+)?)|((\b)?shit(\w+)?)|((\b)dick(\w+|\b))|((\b)ass(\w+|\b))|((\b)cocks?\b)|((\b)cunts?\b)|((\b)twats?\b)|(wtf)|(stfu)|((\b)damn(ed|it)?\b)/gi;
+const profanityRegex = /((?:\w+)?fu+[ck]+(?:\w+)?)|(di[ck]+(?:\w+)?)|(cunt(?:\w+)?)|((?:\w+)?shi+t+(?:\w+)?)|(twat(?:\w+)?)|(co[ck]+(?:s+)?)|((?:\w+)?ass(?:hole|face|head|hat)?\b)|((?:\w+)?damn?(?:ed|it)?)|((?:wta?f|stfu|af)\b)/gi;
 /*
 no + o, na + a, nu +u
 nah, naw, nuh
 nope
 */
-const negationRegex = /\b(n(o+(pe)?|a+(h|w)?|uh))\b/gi;
+const negationRegex = /\b(n(o+(pe)?|a+(h+|w)?|u+h+))\b/gi;
 /*
 ye + e, ya + a, yu + u
-yay, yah, ya
+yah, ya
 yup
 yeah
 */
-const affirmationRegex = /\b(y((e+|a+|u+)(a+)?(y|h|s|p)?)\b)/gi
+const affirmationRegex = /\b(y((e+|a+|u+)(a+)?(h+|s+|p+)?)\b)/gi
 
 
 
