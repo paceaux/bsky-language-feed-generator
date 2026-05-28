@@ -11,7 +11,7 @@ import * as chat from './chat'
 import * as fam from './fam'
 import * as sis from './sis'
 import * as boi from './boi'
-import * as boi from './gurl'
+import * as gurl from './gurl'
 
 type AlgoHandler = (ctx: AppContext, params: QueryParams) => Promise<AlgoOutput>
 
