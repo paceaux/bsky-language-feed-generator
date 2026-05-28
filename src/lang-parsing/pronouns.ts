@@ -7,7 +7,10 @@ import {hasArticleOrDemonstrative, hasPossessive, hasAdjective, hasPreposition, 
       second part is the pronoun itself: 
         chat, dude, bro, bruh, guy, sis, fam
     */
-const possiblePronounRegex = /(?<!\b(a(n(y|other))?|some|th(e(se|ir)?|at|is|ose))\b\s)\b(chat|d(u+)de|br((o+)|uh)|guy|sis|fam)\b\s/gi
+const determinerExp = '(a(?:n(?:y|other))?|some|th(?:e(?:se|ir)?|at|is|ose))'
+const pronounExps = ['du+de', 'bro+', 'bru+h', 'cha+t', 'si+s', 'fa+m', 'gu+rl+', 'bo+i+']
+const possiblePronounRegex = new RegExp(`(?<!\\b${determinerExp}\\b\\s)\\b(?:${pronounExps.join('|')})\\b\\s?`,'i')
+
 
 export function hasPossiblePronounInText(text: string): boolean {
     return possiblePronounRegex.test(text);
