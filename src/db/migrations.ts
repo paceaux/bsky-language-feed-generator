@@ -13,6 +13,7 @@ migrations['001'] = {
     await db.schema
       .createTable('post')
       .addColumn('uri', 'varchar', (col) => col.primaryKey())
+      .addColumn('url', 'varchar', (col) => col.notNull())
       .addColumn('cid', 'varchar', (col) => col.notNull())
       .addColumn('indexedAt', 'varchar', (col) => col.notNull())
       .addColumn('text', 'varchar', (col) => col.notNull())

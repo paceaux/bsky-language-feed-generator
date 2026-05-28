@@ -6,6 +6,32 @@ import { FirehoseSubscriptionBase, getOpsByType } from './util/subscription'
 import { hasPronounInText, getPronounFromText } from './lang-parsing/pronouns';
 import { getPronounData, getDiscourseData} from './lang-parsing/discourse';
 
+/**
+ * Converts an AT URI for a Bluesky post to a https://bsky.app.
+ * Found here: https://github.com/bluesky-social/atproto/discussions/2523
+ *
+ * @param atUri The AT URI of the post.  Must be in the format at://<DID>/<COLLECTION>/<RKEY>
+ * @returns The HTTPS URL to view the post on bsky.app, or null if the AT URI is invalid or not a post.
+ */
+function atUriToBskyAppUrl(atUri: string): string {
+  const regex = /^at:\/\/([^/]+)\/([^/]+)\/([^/]+)$/;
+  const match = atUri.match(regex);
+
+  if (!match) {
+    return ''; // Invalid AT URI format
+  }
+
+  const did = match[1];
+  const collection = match[2];
+  const rkey = match[3];
+
+  if (collection === 'app.bsky.feed.post') {
+    return `https://bsky.app/profile/${did}/post/${rkey}`;
+  } else {
+    return ''; // Not a post record
+  }
+}
+
 export class FirehoseSubscription extends FirehoseSubscriptionBase {
   async handleEvent(evt: RepoEvent) {
     if (!isCommit(evt)) return
@@ -40,6 +66,7 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
         // it also needs to match what you see in db/migrations
         return {
           uri: create.uri,
+          url: atUriToBskyAppUrl(create.uri),
           cid: create.cid,
           text: create.record.text,
           pronoun,
