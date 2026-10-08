@@ -23,7 +23,7 @@ const pronounExps = new Map([
     ['bitch', 'bi+tch'],
     ['queen', 'quee+n+'],
     ['unc', 'u+n+c'],
-    ['auntie', 'auntie']
+    ['auntie', 'aunt(ie|y)']
 ]);
 const possiblePronounRegex = new RegExp(`(?<!\\b${determinerExp}\\b\\s)\\b(?:${[...pronounExps.values()].join('|')})\\b\\s?`,'i')
 
