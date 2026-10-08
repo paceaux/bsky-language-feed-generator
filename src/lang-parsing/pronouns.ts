@@ -19,7 +19,11 @@ const pronounExps = new Map([
     ['sis', 'si+s'],
     ['fam', 'fa+m'],
     ['gurl', 'gu+[rl]+'],
-    ['boi', 'bo+i+' ]
+    ['boi', 'bo+i+' ],
+    ['bitch', 'bi+tch'],
+    ['queen', 'quee+n+'],
+    ['unc', 'u+n+c'],
+    ['auntie', 'auntie']
 ]);
 const possiblePronounRegex = new RegExp(`(?<!\\b${determinerExp}\\b\\s)\\b(?:${[...pronounExps.values()].join('|')})\\b\\s?`,'i')
 
@@ -44,6 +48,8 @@ export function hasPronounInText(text: string): boolean {
     // no need to check the rest
     if (bigramsWithPronoun.length === 1) {
         return true;
+    } else if (bigramsWithPronoun.length === 0) {
+        return false;
     }
     // there's multiple bigrams. Fine. We want the one with a word preceding the possible pronoun;
     // that'll be the first one in this bigram array
