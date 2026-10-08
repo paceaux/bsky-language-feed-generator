@@ -5,13 +5,32 @@
             "name": "Start App",
             "type": "node",
             "request": "launch",
+            "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v20.19.0/bin/node",
             "runtimeArgs": [
                 "-r",
                 "ts-node/register"
             ],
             "args": [
                 "${workspaceFolder}/src/index.ts"
-            ]
+            ],
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
+            "sourceMaps": true,
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "outputCapture": "std"
+        },
+        {
+            "name": "Attach to Process",
+            "type": "node",
+            "request": "attach",
+            "port": 9229,
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "sourceMaps": true
         }
     ]
 }
