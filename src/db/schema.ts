@@ -5,8 +5,13 @@ export type DatabaseSchema = {
 
 export type Post = {
   uri: string
+  url: string
   cid: string
   indexedAt: string
+  text: string
+  pronoun: string
+  pronounPlacement: string
+  surroundingWords: string
 }
 
 export type SubState = {

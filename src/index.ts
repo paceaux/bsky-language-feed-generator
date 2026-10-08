@@ -23,6 +23,7 @@ const run = async () => {
   await server.start()
   console.log(
     `🤖 running feed generator at http://${server.cfg.listenhost}:${server.cfg.port}`,
+    `Pushing to a database in ${server.cfg.sqliteLocation}`,
   )
 }
 

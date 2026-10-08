@@ -13,8 +13,16 @@ migrations['001'] = {
     await db.schema
       .createTable('post')
       .addColumn('uri', 'varchar', (col) => col.primaryKey())
+      .addColumn('url', 'varchar', (col) => col.notNull())
       .addColumn('cid', 'varchar', (col) => col.notNull())
       .addColumn('indexedAt', 'varchar', (col) => col.notNull())
+      .addColumn('text', 'varchar', (col) => col.notNull())
+      .addColumn('pronoun', 'varchar', (col) => col.notNull())
+      .addColumn('pronounPlacement', 'varchar', (col) => col.notNull())
+      .addColumn('surroundingWords', 'varchar', (col) => col.notNull())
+      .addColumn('profanity', 'varchar', (col) => col.notNull())
+      .addColumn('negation', 'varchar', (col) => col.notNull())
+      .addColumn('affirmation', 'varchar', (col) => col.notNull())
       .execute()
     await db.schema
       .createTable('sub_state')
