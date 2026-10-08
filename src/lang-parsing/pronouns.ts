@@ -18,12 +18,12 @@ const pronounExps = new Map([
     ['chat', 'cha+t'],
     ['sis', 'si+s'],
     ['fam', 'fa+m'],
-    ['gurl', 'gu+[rl]+'],
+    ['gurl', 'gu+([rlh]+)?'], // gurl guurl gurrl guuuh
     ['boi', 'bo+i+' ],
     ['bitch', 'bi+tch'],
-    ['queen', 'quee+n+'],
+    ['queen', '(q|k)(w|u)ee+n+'], // queen, kween, kueen, 
     ['unc', 'u+n+c'],
-    ['auntie', 'aunt(ie|y)']
+    ['auntie', 'aunt?(ie|y)'] // auntie, aunty, aunie, auny
 ]);
 const possiblePronounRegex = new RegExp(`(?<!\\b${determinerExp}\\b\\s)\\b(?:${[...pronounExps.values()].join('|')})\\b\\s?`,'i')
 
